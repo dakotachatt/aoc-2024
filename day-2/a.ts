@@ -7,41 +7,17 @@ export async function day2a(data: string[]) {
   let safeCount = 0;
 
   for(let i = 0; i < data.length; i++) {
-    let allIncreasing = true;
-    let allDecreasing = true;
-    let isSafe = true;
+    const differenceArray = []
     const lineArray = data[i].split(' ').map(Number);
 
-    console.log(lineArray)
-
     for(let j = 0; j < lineArray.length - 1; j++) {
-      if(lineArray[j] - lineArray[j+1] > 0) {
-        allDecreasing = false
-      }
-
-      if(lineArray[j] - lineArray[j+1] < 0) {
-        allIncreasing = false
-      }
+      differenceArray.push(lineArray[j] - lineArray[j+1]);
     }
 
-    if(!allDecreasing && !allIncreasing) {
-      continue;
-    }
+    const allInSameOrder = differenceArray.every((value) => value < 0) || differenceArray.every((value) => value > 0);
+    const allWithinBounds = differenceArray.every((value) => Math.abs(value) <= maxDiff) && differenceArray.every((value) => Math.abs(value) >= minDiff);
 
-    for(let j = 0; j < lineArray.length - 1; j++) {
-      const meetsMaxConstraint = Math.abs(lineArray[j] - lineArray[j + 1]) <= maxDiff;
-      const meetsMinConstraint = Math.abs(lineArray[j] - lineArray[j + 1]) >= minDiff;
-
-      // console.log(`${lineArray[j]} - ${lineArray[j+1]} = ${lineArray[j] - lineArray[j+1]}, meetsMax? ${meetsMaxConstraint}, meetsMin? ${meetsMinConstraint}`)
-
-      if(!meetsMaxConstraint || !meetsMinConstraint) {
-        isSafe = false
-      }
-    }
-
-    console.log(`Line ${i}:`, isSafe)
-
-    if(isSafe) {
+    if(allInSameOrder && allWithinBounds) {
       safeCount++;
     }
   }
